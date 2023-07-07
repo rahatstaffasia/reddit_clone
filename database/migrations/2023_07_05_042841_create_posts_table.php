@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->enum('visibility', ['public', 'archived'])->default('public');
             $table->bigInteger('upvotes')->default(0);
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }
