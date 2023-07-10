@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Post\CreatePostRequest;
 use App\Jobs\Post\CreatePost;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -20,25 +21,27 @@ class PostController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create(CreatePostRequest $request)
     {
-        // $response = $this->ajaxDispatch(new CreatePost($request));
 
-        // if ($response['success']) {
-        //     $response['redirect'] = route('accounts.show', $response['data']->id);
+        $response = CreatePost::dispatchSync($request->validated());
 
-        //     $message = trans('messages.success.added', ['type' => trans_choice('general.accounts', 1)]);
 
-        //     flash($message)->success();
-        // } else {
-        //     $response['redirect'] = route('accounts.create');
+        if ($response['success']) {
+            $response['redirect'] = route('accounts.show', $response['data']->id);
 
-        //     $message = $response['message'];
+            $message = trans('messages.success.added', ['type' => trans_choice('general.accounts', 1)]);
 
-        //     flash($message)->error()->important();
-        // }
+            flash($message)->success();
+        } else {
+            $response['redirect'] = route('accounts.create');
 
-        // return response()->json($response);
+            $message = $response['message'];
+
+            flash($message)->error()->important();
+        }
+
+        return response()->json($response);
     }
 
     /**
