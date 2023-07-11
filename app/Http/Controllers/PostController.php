@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Post\CreatePostRequest;
-use App\Jobs\Post\CreatePost;
+use App\Models\User;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -24,24 +24,26 @@ class PostController extends Controller
     public function create(CreatePostRequest $request)
     {
 
-        $response = CreatePost::dispatchSync($request->validated());
+        try {
 
+            $post = Post::create($request->validated());
 
-        if ($response['success']) {
-            $response['redirect'] = route('accounts.show', $response['data']->id);
+            return response()->json([
+                'message' => 'Post created successfully',
+                'post' => $post
+            ], 201);
 
-            $message = trans('messages.success.added', ['type' => trans_choice('general.accounts', 1)]);
+        } catch (\Throwable $th) {
+            //throw $th;
 
-            flash($message)->success();
-        } else {
-            $response['redirect'] = route('accounts.create');
-
-            $message = $response['message'];
-
-            flash($message)->error()->important();
+            return response()->json([
+                'message' => 'Post not created',
+                'error' => $th->getMessage()
+            ], 400);
         }
 
-        return response()->json($response);
+
+
     }
 
     /**
