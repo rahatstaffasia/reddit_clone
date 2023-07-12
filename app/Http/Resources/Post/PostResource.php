@@ -19,6 +19,7 @@ class PostResource extends JsonResource
             'title' => $this->title,
             'body' => substr($this->body, 0, 100),
             'user' => $this->user,
+            'url' => route('posts.show', $this->slug),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

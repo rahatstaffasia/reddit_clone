@@ -9,12 +9,12 @@ trait CanSendResponses
     /**
      * Send a success response.
      *
-     * @param  array<string, mixed>  $data
+     * @param  mixed  $data
      * @param  string  $message
      * @param  int  $status
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sendResponse(array $data, string $message = '', int $status = 200): JsonResponse
+    public function sendResponse($data, string $message = '', int $status = 200): JsonResponse
     {
         return response()->json([
             'success' => true,
